@@ -9,7 +9,7 @@ import (
 
 var DB *sql.DB
 
-func connect() {
+func Connect() {
 	var err error
 
 	dsn := "root:password@tcp(127.0.0.1:3306)/my_database"
