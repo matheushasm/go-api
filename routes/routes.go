@@ -7,8 +7,8 @@ import (
 )
 
 func SetupRoutes() {
-	http.HandleFunc("/users", handlers.GetUsers)
-	http.HandleFunc("/user", handlers.CreateUser)
-	http.HandleFunc("/user/update", handlers.UpdateUser)
-	http.HandleFunc("/user/delete", handlers.DeleteUser)
+	http.HandleFunc("/users", handlers.GetAll)
+	http.HandleFunc("/user", handlers.Create)
+	http.HandleFunc("/user/update", handlers.Update)
+	http.HandleFunc("/user/delete", handlers.Delete)
 }
