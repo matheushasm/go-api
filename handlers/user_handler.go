@@ -97,9 +97,20 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := "UPDATE users SET name = ?, email = ? WHERE id = ?"
-	_, err := database.DB.Exec(query, user.Name, user.Email, user.ID)
+	result, err := database.DB.Exec(query, user.Name, user.Email, user.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching affected rows: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	if rowsAffected == 0 {
+		http.Error(w, "No user found with the given ID", http.StatusNotFound)
 		return
 	}
 
