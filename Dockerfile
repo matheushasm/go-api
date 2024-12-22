@@ -13,6 +13,8 @@ FROM alpine:latest
 
 WORKDIR /app
 
+COPY .env.example .env
+
 COPY --from=builder /app/main .
 
 EXPOSE 8080
