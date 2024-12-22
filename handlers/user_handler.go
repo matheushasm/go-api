@@ -86,7 +86,15 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user models.User
-	json.NewDecoder(r.Body).Decode(&user)
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, fmt.Sprintf("Invalid JSON: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if user.Name == "" || user.Email == "" || user.ID < 1 {
+		http.Error(w, "ID, Name and Email are required fields", http.StatusBadRequest)
+		return
+	}
 
 	query := "UPDATE users SET name = ?, email = ? WHERE id = ?"
 	_, err := database.DB.Exec(query, user.Name, user.Email, user.ID)
@@ -107,6 +115,12 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
+
+	if id == "" {
+		http.Error(w, "ID is required field", http.StatusBadRequest)
+		return
+	}
+
 	query := "DELETE FROM users WHERE id = ?"
 	_, err := database.DB.Exec(query, id)
 	if err != nil {
